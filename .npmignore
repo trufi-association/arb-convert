@@ -1,2 +1,6 @@
 src/
-tsconfig.json
+.vscode/
+
+.DS_Store
+*.arb
+*.xliff
