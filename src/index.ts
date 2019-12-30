@@ -1,6 +1,7 @@
 import { ConvertOptions, ParseOptions } from './types';
-import { convert as convertToXliff1_2 } from './formats/xliff-1_2';
-import { convert as convertToXliff2_1 } from './formats/xliff-2_1';
+import { convert as convertToXliff1_2, parse as parseXliff1_2 } from './formats/xliff-1_2';
+import { convert as convertToXliff2_1, parse as parseXliff2_1 } from './formats/xliff-2_1';
+import { convert as convertGettext, parse as parseGettext } from './formats/gettext';
 
 export function convertFromArb(format: string, options: ConvertOptions): ParseOptions {
     const defaultOptions: Partial<ConvertOptions> = {
@@ -23,6 +24,9 @@ export function convertFromArb(format: string, options: ConvertOptions): ParseOp
         case 'xliff-2.1':
             return convertToXliff2_1(options);
 
+        case 'gettext':
+            return convertGettext(options);
+
         default:
             throw new Error(`Format ${format} is not supported`);
     }
@@ -42,14 +46,15 @@ export function parseToArb(format: string, options: ParseOptions): ConvertOption
 
         case 'xliff-1.x':
         case 'xliff-1.2':
-            const { parse: parseXliff1_2 } = require('./formats/xliff-1_2');
             return parseXliff1_2(options);
 
         case 'xliff-2.x':
         case 'xliff-2.0':
         case 'xliff-2.1':
-            const { parse: parseXliff2_1 } = require('./formats/xliff-2_1');
             return parseXliff2_1(options);
+
+        case 'gettext':
+            return parseGettext(options);
 
         default:
             throw new Error(`Format ${format} is not supported`);

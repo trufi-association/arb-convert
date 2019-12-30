@@ -4,3 +4,8 @@ src/
 .DS_Store
 *.arb
 *.xliff
+*.po
+*.pot
+
+.tsconfig.json
+.editorconfig

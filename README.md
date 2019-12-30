@@ -7,12 +7,16 @@ npm install -g arb-convert
 ```
 
 ## Background
+
 ARB is the format of choice when using the [Dart intl](https://pub.dev/packages/intl) package to localize [Flutter](https://flutter.dev/) apps. It has not seen wide adoption by translation providers however. Since December 2019, Google shut down its Translator Toolkit that has natively supported the ARB format. So now Flutter devs can either migrate to another library and format, edit files by hand or convert to another format. This project aims to aid with the latter.
 
 ## Supported formats
 
 * XLIFF 1.2/2.0/2.1
+* GNU gettext
 * ... add your format, PRs welcome
+
+Please note that ICU placeholders and plural notations are not converted.
 
 ## Node.js
 
@@ -63,4 +67,31 @@ Options:
   --sourceout <filename>  write source ARB to file if given or stdout if omitted
   --targetout <filename>  write target ARB to file if given
   -h, --help              output usage information
-  ```
+```
+
+### arb2po
+
+```shell
+Usage: arb2po [options]
+
+Options:
+  --sourcefile <filename>  source ARB file (required)
+  --targetfile <filename>  target ARB file
+  --original <value>       where the translations come from
+  --sourcelang <locale>    source locale override, e.g. en-US, in case it cannot be determined from file content or file name
+  --targetlang <locale>    target locale override, e.g. de-DE, in case it cannot be determined from file content or file name
+  --out <filename>         write PO to file if given or stdout if omitted
+  -h, --help               output usage information
+```
+
+### po2arb
+
+```shell
+Usage: po2arb [options]
+
+Options:
+  --file <filename>       source PO file (required)
+  --sourceout <filename>  write source ARB to file if given or stdout if omitted
+  --targetout <filename>  write target ARB to file if given
+  -h, --help              output usage information
+```

@@ -20,7 +20,10 @@
   },
   "keywords": [
     "ARB",
+    "Application Resource Bundle",
     "XLIFF",
+    "gettext",
+    "PO",
     "translation",
     "converter",
     "Flutter",

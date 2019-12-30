@@ -12,7 +12,7 @@ export interface ParseOptions {
 
 export interface ArbPlaceholders {
     [placeholder: string]: {
-        example?: string,
+        [property: string]: string;
     }
 }
 
