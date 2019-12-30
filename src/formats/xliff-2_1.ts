@@ -43,12 +43,14 @@ export function convert({
 
             if (Object.keys(placeholders).length > 0) {
                 Object.keys(placeholders).forEach(paramName =>
-                    notesChildren.push(
-                        makeElement('note', {
-                            'category': 'placeholder',
-                        }, [
-                            makeText(`{${paramName}} example: ${placeholders[paramName].example}`),
-                        ])
+                    Object.keys(placeholders[paramName]).forEach(property =>
+                        notesChildren.push(
+                            makeElement('note', {
+                                'category': 'placeholder',
+                            }, [
+                                makeText(`{${paramName}} ${property}: ${placeholders[paramName][property]}`),
+                            ])
+                        )
                     )
                 );
             }

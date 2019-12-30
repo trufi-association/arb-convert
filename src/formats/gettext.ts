@@ -47,10 +47,12 @@ msgstr ""
                 content += '\n' + gettextComment('#.', description);
             }
 
-            Object.keys(placeholders).forEach(paramName => {
-                const example = `{${paramName}} example: ${placeholders[paramName].example}`;
-                content += '\n' + gettextComment('#.', example);
-            });
+            Object.keys(placeholders).forEach(paramName =>
+                Object.keys(placeholders[paramName]).forEach(property => {
+                    const example = `{${paramName}} ${property}: ${placeholders[paramName][property]}`;
+                    content += '\n' + gettextComment('#.', example);
+                })
+            );
 
             content += '\n' + gettextString('msgctxt', key);
             content += '\n' + gettextString('msgid', sourceString);

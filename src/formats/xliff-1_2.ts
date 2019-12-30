@@ -39,16 +39,24 @@ export function convert({
             }
 
             if (Object.keys(placeholders).length > 0) {
+                const contextGroupChildren: Element[] = [];
+
+                Object.keys(placeholders).forEach(paramName =>
+                    Object.keys(placeholders[paramName]).forEach(property =>
+                        contextGroupChildren.push(
+                            makeElement('context', {
+                                'context-type': 'paramnotes',
+                            }, [
+                                makeText(`{${paramName}} ${property}: ${placeholders[paramName][property]}`),
+                            ])
+                        )
+                    )
+                );
+
                 children.push(
                     makeElement('context-group', {
                         purpose: 'informational',
-                    }, Object.keys(placeholders).map(paramName =>
-                        makeElement('context', {
-                            'context-type': 'paramnotes',
-                        }, [
-                            makeText(`{${paramName}} example: ${placeholders[paramName].example}`),
-                        ])
-                    ))
+                    }, contextGroupChildren)
                 );
             }
 
