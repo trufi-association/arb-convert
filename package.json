@@ -12,7 +12,8 @@
     "prepublish": "npm run build",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -40,7 +41,29 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
     "typescript": "^3.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "index.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**"
+    ],
+    "testRegex": ".test.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "coverage",
+    "testEnvironment": "node"
   }
 }

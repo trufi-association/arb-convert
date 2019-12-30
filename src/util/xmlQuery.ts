@@ -10,16 +10,17 @@ import { Element } from "xml-js";
 
 type MapCallbackFunc<T,> = (value: T, index: number, array: T[]) => any;
 type ForeachCallbackFunc<T> = (value: T, index: number, array: T[]) => void;
-type FilterCallback<T> = (value: T) => boolean;
-type Predicate = string | number | FilterCallback<XmlQueryNode<any>>;
+type FilterCallbackFunc<T> = (value: T, index: number, array: T[]) => boolean;
+type Predicate = string | number | FilterCallbackFunc<XmlQueryNode<any>>;
 type XmlQueryNode<T> = Element & {
     __xmlQuery: true,
     originalNode: T;
+    innerElements: () => Element[];
+    innerText: () => string;
     query: (predicate: Predicate) => XmlQueryNode<T>;
     queryAll: (predicate: Predicate) => XmlQueryNode<T>;
     map: (callbackfn: MapCallbackFunc<XmlQueryNode<T>>, thisArg?: any) => XmlQueryNode<T>;
     forEach: (callbackfn: ForeachCallbackFunc<XmlQueryNode<T>>, thisArg?: any) => void;
-    innerText: () => string;
 };
 type AllowedInput = Element | Element[] | XmlQueryNode<any> | string | number | undefined;
 
@@ -34,90 +35,99 @@ export default function xmlQuery(node: AllowedInput) {
 
     if (node == null || typeof node === 'string' || typeof node === 'number') {
         return wrappedNode as XmlQueryNode<typeof node>;
-    } else if ('__xmlQuery' in node) {
+    }
+    if ('__xmlQuery' in node) {
         return node;
-    } else if (Array.isArray(node)) {
-        const elements = node.flatMap(nd => nd.elements || []);
-        wrappedNode.elements = elements;
-
-        wrappedNode.query = query.bind(wrappedNode, elements);
-        wrappedNode.queryAll = queryAll.bind(wrappedNode, elements);
-        wrappedNode.forEach = forEach.bind(wrappedNode, node);
-        wrappedNode.map = map.bind(wrappedNode, node);
-        wrappedNode.innerText = innerText.bind(wrappedNode, elements);
+    }
+    if (Array.isArray(node)) {
+        wrappedNode.elements = node;
     } else {
         Object.assign(wrappedNode, node);
-        const elements = node.elements || [];
-
-        wrappedNode.query = query.bind(wrappedNode, elements);
-        wrappedNode.queryAll = queryAll.bind(wrappedNode, elements);
-        wrappedNode.forEach = forEach.bind(wrappedNode, elements);
-        wrappedNode.map = map.bind(wrappedNode, elements);
-        wrappedNode.innerText = innerText.bind(wrappedNode, elements);
     }
+
+    wrappedNode.innerElements = innerElements.bind<any>(wrappedNode);
+    wrappedNode.innerText = innerText.bind<any>(wrappedNode);
+    wrappedNode.query = query.bind<any>(wrappedNode);
+    wrappedNode.queryAll = queryAll.bind<any>(wrappedNode);
+    wrappedNode.forEach = forEach.bind<any>(wrappedNode);
+    wrappedNode.map = map.bind<any>(wrappedNode);
 
     return wrappedNode as XmlQueryNode<typeof node>;
 }
 
-function query(elements: Element[], predicate: Predicate) {
+function innerElements<T>(this: XmlQueryNode<T>) {
+    return Array.isArray(this.originalNode)
+        ? this.elements!.flatMap(el => el.elements || [])
+        : this.elements!;
+}
+
+function innerText<T>(this: XmlQueryNode<T>) {
+    return this.innerElements()
+        .filter(el => el.type === 'text')
+        .map(el => el.text)
+        .join('');
+}
+
+function query<T>(this: XmlQueryNode<T>, predicate: Predicate) {
     switch (typeof predicate) {
         case 'string':
             return xmlQuery(
-                elements
+                this.innerElements()
                     .map(xmlQuery)
                     .find(el => el.name === predicate)
             );
 
         case 'number':
             return xmlQuery(
-                elements[predicate]
+                this.innerElements()
+                    .map(xmlQuery)
+                    [predicate]
             );
 
         default:
-            return xmlQuery(elements.map(xmlQuery).find(predicate));
+            return xmlQuery(
+                this.innerElements()
+                    .map(xmlQuery)
+                    .find(predicate)
+                );
     }
 }
 
-function queryAll(elements: Element[], predicate: Predicate) {
+function queryAll<T>(this: XmlQueryNode<T>, predicate: Predicate) {
     switch (typeof predicate) {
         case 'string':
             return xmlQuery(
-                elements
+                this.innerElements()
                     .map(xmlQuery)
                     .filter(el => el.name === predicate)
             );
 
         case 'number':
-            return xmlQuery(
-                elements[predicate]
-            );
+            return xmlQuery([
+                this.innerElements()
+                    .map(xmlQuery)
+                    [predicate]
+            ]);
 
         default:
             return xmlQuery(
-                elements
+                this.innerElements()
                     .map(xmlQuery)
                     .filter(predicate)
             );
     }
 }
 
-function forEach(elements: Element[], cb: ForeachCallbackFunc<XmlQueryNode<Element[]>>, thisArg?: any): void {
-    return elements
+function forEach<T>(this: XmlQueryNode<T>, cb: ForeachCallbackFunc<XmlQueryNode<Element[]>>, thisArg?: any): void {
+    return this.elements!
         .map(xmlQuery)
         .forEach(cb, thisArg);
 }
 
-function map(elements: Element[], cb: MapCallbackFunc<XmlQueryNode<Element[]>>, thisArg?: any): XmlQueryNode<any> {
+function map<T>(this: XmlQueryNode<T>, cb: MapCallbackFunc<XmlQueryNode<Element[]>>, thisArg?: any): XmlQueryNode<any> {
     return xmlQuery(
-        elements
+        this.elements!
             .map(xmlQuery)
             .map(cb, thisArg)
     );
-}
-
-function innerText(elements: Element[]) {
-    return elements
-        .filter(el => el.type === 'text')
-        .map(el => el.text)
-        .join('');
 }

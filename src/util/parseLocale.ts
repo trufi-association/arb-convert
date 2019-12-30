@@ -1,4 +1,4 @@
-export default function parseLocale(...candidates: string[]) {
+export default function parseLocale(...candidates: string[] | undefined[]) {
     for (const candidate of candidates) {
         if (candidate != null) {
             const matches = candidate.match(/(^|[\W_])([a-z]{2}[-_][A-Z]{2})($|[\W_])/);
