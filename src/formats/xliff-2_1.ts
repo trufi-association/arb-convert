@@ -47,7 +47,7 @@ export function convert({
                         makeElement('note', {
                             'category': 'placeholder',
                         }, [
-                            makeText(`${paramName} example: ${placeholders[paramName].example}`),
+                            makeText(`{${paramName}} example: ${placeholders[paramName].example}`),
                         ])
                     )
                 );
@@ -139,7 +139,7 @@ export function parse({ content }: ParseOptions): ConvertOptions {
                     el.attributes?.category === 'placeholder'
                 )
                 .forEach(el => {
-                    const match = el.innerText().match(/^([\w-]+) (.*): (.*)$/);
+                    const match = el.innerText().match(/^\{([\w-]+)\} (.*): (.*)$/);
                     if (match) {
                         const [, key, type, value] = match;
                         placeholders[key] = {

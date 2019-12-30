@@ -99,9 +99,9 @@ export function parse({ content }: ParseOptions): ConvertOptions {
             let description = '';
 
             for (const comment of entry.extractedCommentLines) {
-                const matches = comment.match(/^\{([\w-]+)\} (.*): (.*)$/);
-                if (matches) {
-                    const [, field, key, value] = matches;
+                const match = comment.match(/^\{([\w-]+)\} (.*): (.*)$/);
+                if (match) {
+                    const [, field, key, value] = match;
                     placeholders[field] = placeholders[field] || {};
                     placeholders[field][key] = value;
                 } else {
