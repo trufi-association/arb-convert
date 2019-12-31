@@ -1,4 +1,7 @@
-import { ConvertOptions, ParseOptions, ApplicationResourceBundle, ArbMeta, ArbPlaceholders } from '../types';
+import { ConvertOptions, ParseOptions, ApplicationResourceBundle, ArbPlaceholders } from '../types';
+import zeroPad from '../util/zeroPad';
+
+const MAX_CHAR_WIDTH = 80;
 
 export function convert({
     source,
@@ -15,11 +18,11 @@ export function convert({
     content += `
 # Translation converted from ARB
 # original: ${original || ''}
-# srcLang: ${sourceLanguage}
+# srcLang: ${sourceLanguage || ''}
 # trgLang: ${targetLanguage || ''}
 msgid ""
 msgstr ""
-"PO-Revision-Date: ${formatDate(new Date())}"
+"PO-Revision-Date: ${formatDate(new Date(Date.now()))}"
 "MIME-Version: 1.0"
 "Content-Type: text/plain; charset=UTF-8"
 "Content-Transfer-Encoding: 8bit"
@@ -44,19 +47,19 @@ msgstr ""
             content += '\n';
 
             if (description) {
-                content += '\n' + gettextComment('#.', description);
+                content += '\n' + gettextComment('#.', description, MAX_CHAR_WIDTH);
             }
 
             Object.keys(placeholders).forEach(paramName =>
                 Object.keys(placeholders[paramName]).forEach(property => {
                     const example = `{${paramName}} ${property}: ${placeholders[paramName][property]}`;
-                    content += '\n' + gettextComment('#.', example);
+                    content += '\n' + gettextComment('#.', example, MAX_CHAR_WIDTH);
                 })
             );
 
-            content += '\n' + gettextString('msgctxt', key);
-            content += '\n' + gettextString('msgid', sourceString);
-            content += '\n' + gettextString('msgstr', targetString);
+            content += '\n' + gettextString('msgctxt', key, MAX_CHAR_WIDTH);
+            content += '\n' + gettextString('msgid', sourceString, MAX_CHAR_WIDTH);
+            content += '\n' + gettextString('msgstr', targetString, MAX_CHAR_WIDTH);
         });
 
     content += '\n';
@@ -130,11 +133,11 @@ export function parse({ content }: ParseOptions): ConvertOptions {
     }
 
     srcArb['@@locale'] = sourceLanguage.replace('-', '_');
-    srcArb['@@last_modified'] = new Date().toISOString();
+    srcArb['@@last_modified'] = new Date(Date.now()).toISOString();
 
     if (targetLanguage) {
         trgArb['@@locale'] = targetLanguage.replace('-', '_');
-        trgArb['@@last_modified'] = new Date().toISOString();
+        trgArb['@@last_modified'] = new Date(Date.now()).toISOString();
     }
 
     const source = JSON.stringify(srcArb, null, 2);
@@ -150,30 +153,20 @@ export function parse({ content }: ParseOptions): ConvertOptions {
 }
 
 // YEAR-MO-DA HO:MI+ZONE, e.g. 2008-07-22 18:13+0200
-function formatDate(date: Date) {
+export function formatDate(date: Date) {
     return `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(date.getDate())} ${zeroPad(date.getHours())}:${zeroPad(date.getMinutes())}${timezoneOffset(date)}`;
 }
 
-function zeroPad(value: string | number, length = 2): string {
-    value = String(value);
-
-    while (value.length < length) {
-        value = '0' + value;
-    }
-
-    return value;
-}
-
-function timezoneOffset(date: Date): string {
+export function timezoneOffset(date: Date): string {
     const offset = date.getTimezoneOffset();
     const sign = offset <= 0 ? '+' : '-';
-    const hours = Math.floor(offset / -60);
-    const minutes = offset * -1 % 60;
+    const hours = Math.floor(Math.abs(offset) / 60);
+    const minutes = Math.abs(offset) % 60;
 
     return sign + zeroPad(hours) + zeroPad(minutes);
 }
 
-function gettextComment(prefix: string, value: string, maxCharWidth = 80) {
+export function gettextComment(prefix: string, value: string, maxCharWidth: number) {
     const splitValue = [];
 
     while (value.length > maxCharWidth - prefix.length - 1) {
@@ -185,7 +178,7 @@ function gettextComment(prefix: string, value: string, maxCharWidth = 80) {
     return splitValue.join('\n');
 }
 
-function gettextString(prefix: string, value: string, maxCharWidth = 80) {
+export function gettextString(prefix: string, value: string, maxCharWidth: number) {
     value = value.replace(/\n/, '\\n');
 
     if (value.length <= maxCharWidth - prefix.length - 3) {
@@ -212,9 +205,9 @@ interface GettextEntry {
     msgstr: string;
 }
 
-interface Gettext extends Array<GettextEntry> {}
+export interface Gettext extends Array<GettextEntry> {}
 
-function gettextToJs(content: string): Gettext {
+export function gettextToJs(content: string): Gettext {
     const result: Gettext = [];
     let multilineScope = '';
     let translatorCommentLines: string[] = [];
@@ -286,11 +279,11 @@ function gettextToJs(content: string): Gettext {
                 break;
 
             case '#:':
-                references = references.concat(text.split(',').map(String.prototype.trim));
+                references = references.concat(text.split(',').map(part => part.trim()));
                 break;
 
             case '#,':
-                flags = flags.concat(text.split(',').map(String.prototype.trim));
+                flags = flags.concat(text.split(',').map(part => part.trim()));
                 break;
 
             case 'msgctxt':

@@ -75,7 +75,7 @@ export function convert({
             'xml:space': 'preserve',
             'source-language': sourceLanguage,
             'target-language': targetLanguage,
-            date: new Date().toISOString(),
+            date: new Date(Date.now()).toISOString(),
         }, [
             makeElement('body', {}, transUnits),
         ]),
@@ -103,11 +103,11 @@ export function parse({ content }: ParseOptions): ConvertOptions {
     const hasTarget = targetLanguage != null;
 
     srcArb['@@locale'] = sourceLanguage.replace('-', '_');
-    srcArb['@@last_modified'] = new Date().toISOString();
+    srcArb['@@last_modified'] = new Date(Date.now()).toISOString();
 
     if (hasTarget) {
         trgArb['@@locale'] = targetLanguage.replace('-', '_');
-        trgArb['@@last_modified'] = new Date().toISOString();
+        trgArb['@@last_modified'] = new Date(Date.now()).toISOString();
     }
 
     file

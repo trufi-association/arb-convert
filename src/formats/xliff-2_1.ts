@@ -105,11 +105,11 @@ export function parse({ content }: ParseOptions): ConvertOptions {
     const original = file.attributes!.original as string;
 
     srcArb['@@locale'] = sourceLanguage.replace('-', '_');
-    srcArb['@@last_modified'] = new Date().toISOString();
+    srcArb['@@last_modified'] = new Date(Date.now()).toISOString();
 
     if (hasTarget) {
         trgArb['@@locale'] = targetLanguage.replace('-', '_');
-        trgArb['@@last_modified'] = new Date().toISOString();
+        trgArb['@@last_modified'] = new Date(Date.now()).toISOString();
     }
 
     file

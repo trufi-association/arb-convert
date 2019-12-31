@@ -53,9 +53,7 @@
       "json",
       "ts"
     ],
-    "coveragePathIgnorePatterns": [
-      "index.ts"
-    ],
+    "coveragePathIgnorePatterns": [],
     "collectCoverageFrom": [
       "src/**"
     ],
