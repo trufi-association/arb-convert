@@ -26,6 +26,10 @@ type AllowedInput = Element | Element[] | XmlQueryNode<any> | string | number | 
 
 
 export default function xmlQuery(node: AllowedInput) {
+    if (typeof node === 'object' && '__xmlQuery' in node) {
+        return node;
+    }
+
     const wrappedNode: Partial<XmlQueryNode<typeof node>> = {
         __xmlQuery: true,
         originalNode: node,
@@ -33,15 +37,9 @@ export default function xmlQuery(node: AllowedInput) {
         elements: [], // default
     };
 
-    if (node == null || typeof node === 'string' || typeof node === 'number') {
-        return wrappedNode as XmlQueryNode<typeof node>;
-    }
-    if ('__xmlQuery' in node) {
-        return node;
-    }
     if (Array.isArray(node)) {
         wrappedNode.elements = node;
-    } else {
+    } else if (node != null && typeof node !== 'string' && typeof node !== 'number') {
         Object.assign(wrappedNode, node);
     }
 

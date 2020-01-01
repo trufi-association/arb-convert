@@ -293,3 +293,56 @@ describe('handles single Elements correctly', () => {
         expect(result2.elements).toEqual(result2Expected);
     });
 });
+
+
+describe('handles primitives correctly', () => {
+    test('wraps primitive correctly', () => {
+        const node = xmlQuery('foo');
+
+        expect(node.name).toBeUndefined();
+        expect(node.originalNode).toBe('foo');
+        expect(node.elements).toHaveLength(0);
+    });
+
+    test('innerElements on primitive', () => {
+        const node = xmlQuery('foo');
+        expect(node.innerElements()).toEqual([]);
+    });
+
+    test('innerText on primitive', () => {
+        const node = xmlQuery('foo');
+        expect(node.innerText()).toBe('');
+    });
+
+    test('query on primitive', () => {
+        const node = xmlQuery('foo');
+
+        expect(node.query('first')).toMatchObject({ originalNode: undefined, elements: [] });
+        expect(node.query(0)).toMatchObject({ originalNode: undefined, elements: [] });
+        expect(node.query(node => node.name === 'first')).toMatchObject({ originalNode: undefined, elements: [] });
+    });
+
+    test('queryAll on primitive', () => {
+        const node = xmlQuery('foo');
+
+        expect(node.queryAll('first')).toMatchObject({ originalNode: [], elements: [] });
+        expect(node.queryAll(0)).toMatchObject({ originalNode: [undefined], elements: [undefined] });
+        expect(node.queryAll(node => node.name === 'first')).toMatchObject({ originalNode: [], elements: [] });
+    });
+
+    test('forEach on primitive', () => {
+        const node = xmlQuery('foo');
+        const result: any[] = [];
+
+        node.forEach(el => result.push(el))
+        expect(result).toEqual([]);
+    });
+
+    test('map on primitive', () => {
+        const node = xmlQuery('foo');
+        const result = node.map(el => el.name);
+
+        expect(result.originalNode).toEqual([]);
+        expect(result.elements).toEqual([]);
+    });
+});
