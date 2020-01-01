@@ -97,15 +97,14 @@ export function parse({ content }: ParseOptions): ConvertOptions {
     const parsedXml = xmlQuery(xmlJsNode);
     const xliff = parsedXml.query('xliff');
     const file = xliff.query('file');
-    const original = file.attributes!.original as string;
-    const sourceLanguage = file.attributes!['source-language'] as string;
-    const targetLanguage = file.attributes!['target-language'] as string;
-    const hasTarget = targetLanguage != null;
+    const original = String(file.attributes!.original || '');
+    const sourceLanguage = String(file.attributes!['source-language'] || '');
+    const targetLanguage = String(file.attributes!['target-language'] || '');
 
     srcArb['@@locale'] = sourceLanguage.replace('-', '_');
     srcArb['@@last_modified'] = new Date(Date.now()).toISOString();
 
-    if (hasTarget) {
+    if (targetLanguage) {
         trgArb['@@locale'] = targetLanguage.replace('-', '_');
         trgArb['@@last_modified'] = new Date(Date.now()).toISOString();
     }
@@ -125,7 +124,8 @@ export function parse({ content }: ParseOptions): ConvertOptions {
             const description = transUnit
                 .query(el =>
                     el.name === 'note' &&
-                    el.attributes?.from === 'developer'
+                    el.attributes != null &&
+                    el.attributes.from === 'developer'
                 )
                 .innerText();
 
@@ -133,11 +133,13 @@ export function parse({ content }: ParseOptions): ConvertOptions {
             transUnit
                 .queryAll(el =>
                     el.name === 'context-group' &&
-                    el.attributes?.purpose === 'informational'
+                    el.attributes != null &&
+                    el.attributes.purpose === 'informational'
                 )
                 .queryAll(el => {
                     return el.name === 'context' &&
-                    el.attributes?.['context-type'] === 'paramnotes'
+                    el.attributes != null &&
+                    el.attributes['context-type'] === 'paramnotes'
                 })
                 .forEach(el => {
                     const match = el.innerText().match(/^\{([\w-]+)\} (.*): (.*)$/);
@@ -165,7 +167,7 @@ export function parse({ content }: ParseOptions): ConvertOptions {
         });
 
     const source = JSON.stringify(srcArb, null, 2);
-    const target = hasTarget ? JSON.stringify(trgArb, null, 2) : '';
+    const target = targetLanguage ? JSON.stringify(trgArb, null, 2) : '';
 
     return {
         source,

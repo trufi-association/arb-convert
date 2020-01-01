@@ -98,16 +98,15 @@ export function parse({ content }: ParseOptions): ConvertOptions {
     const xmlJsNode = xml2js(content) as Element;
     const parsedXml = xmlQuery(xmlJsNode);
     const xliff = parsedXml.query('xliff');
-    const sourceLanguage = xliff.attributes!.srcLang as string;
-    const targetLanguage = xliff.attributes!.trgLang as string;
-    const hasTarget = targetLanguage != null;
+    const sourceLanguage = String(xliff.attributes!.srcLang || '');
+    const targetLanguage = String(xliff.attributes!.trgLang || '');
     const file = xliff.query('file');
-    const original = file.attributes!.original as string;
+    const original = String(file.attributes!.original || '');
 
     srcArb['@@locale'] = sourceLanguage.replace('-', '_');
     srcArb['@@last_modified'] = new Date(Date.now()).toISOString();
 
-    if (hasTarget) {
+    if (targetLanguage) {
         trgArb['@@locale'] = targetLanguage.replace('-', '_');
         trgArb['@@last_modified'] = new Date(Date.now()).toISOString();
     }
@@ -129,7 +128,8 @@ export function parse({ content }: ParseOptions): ConvertOptions {
                 .query('notes')
                 .query(el =>
                     el.name === 'note' &&
-                    el.attributes?.category === 'description'
+                    el.attributes != null &&
+                    el.attributes.category === 'description'
                 )
                 .innerText();
 
@@ -138,7 +138,8 @@ export function parse({ content }: ParseOptions): ConvertOptions {
                 .query('notes')
                 .queryAll(el =>
                     el.name === 'note' &&
-                    el.attributes?.category === 'placeholder'
+                    el.attributes != null &&
+                    el.attributes.category === 'placeholder'
                 )
                 .forEach(el => {
                     const match = el.innerText().match(/^\{([\w-]+)\} (.*): (.*)$/);
@@ -166,7 +167,7 @@ export function parse({ content }: ParseOptions): ConvertOptions {
         });
 
     const source = JSON.stringify(srcArb, null, 2);
-    const target = hasTarget ? JSON.stringify(trgArb, null, 2) : '';
+    const target = targetLanguage ? JSON.stringify(trgArb, null, 2) : '';
 
     return {
         source,
