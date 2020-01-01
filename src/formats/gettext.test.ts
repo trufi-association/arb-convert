@@ -1,11 +1,11 @@
-import { convert, parse, formatDate, timezoneOffset, gettextToJs, Gettext } from './gettext';
+import { convert, parse, timezoneOffset, gettextToJs, Gettext } from './gettext';
 import { ConvertOptions, ParseOptions } from '../types';
 import mockDateNow from '../../tests/mockDateNow';
 const { now } = mockDateNow();
 
-const source = (lastModified: Date) => JSON.stringify({
+const source = JSON.stringify({
     "@@locale": "en_US",
-    "@@last_modified": lastModified.toISOString(),
+    "@@last_modified": "2019-12-31T16:00:00.000Z",
     "simple": "Super simple",
     "@simple": {
         "description": "",
@@ -36,9 +36,9 @@ const source = (lastModified: Date) => JSON.stringify({
     },
 }, null, 2);
 
-const target = (lastModified: Date) => JSON.stringify({
+const target = JSON.stringify({
     "@@locale": "de_DE",
-    "@@last_modified": lastModified.toISOString(),
+    "@@last_modified": "2019-12-31T16:00:00.000Z",
     "simple": "Super simpel",
     "@simple": {
         "description": "",
@@ -69,26 +69,26 @@ const target = (lastModified: Date) => JSON.stringify({
     },
 }, null, 2);
 
-const expectedContentEmpty = (revisionDate: Date) => ''
+const expectedContentEmpty = ''
     + '# Translation converted from ARB\n'
     + '# original: \n'
     + '# srcLang: \n'
     + '# trgLang: \n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
+    + '"PO-Revision-Date: 2019-12-31 17:00+0100"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n';
 
-const expectedContentWithSource = (revisionDate: Date) => ''
+const expectedContentWithSource = ''
     + '# Translation converted from ARB\n'
     + '# original: some ns\n'
     + '# srcLang: en-US\n'
     + '# trgLang: \n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
+    + '"PO-Revision-Date: 2019-12-31 17:00+0100"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n'
@@ -118,14 +118,14 @@ const expectedContentWithSource = (revisionDate: Date) => ''
     + 'msgid "But a short string :D"\n'
     + 'msgstr ""\n';
 
-const expectedContentWithSourceAndTarget = (revisionDate: Date) => ''
+const expectedContentWithSourceAndTarget = ''
     + '# Translation converted from ARB\n'
     + '# original: some ns\n'
     + '# srcLang: en-US\n'
     + '# trgLang: de-DE\n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
+    + '"PO-Revision-Date: 2019-12-31 17:00+0100"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n'
@@ -161,39 +161,39 @@ const expectedContentWithSourceAndTarget = (revisionDate: Date) => ''
 describe('convert ARB to gettext PO', () => {
     test('with empty source and no other options', () => {
         expect(convert({ source: '{}' })).toEqual<ParseOptions>({
-            content: expectedContentEmpty(new Date(now)),
+            content: expectedContentEmpty,
         });
     });
 
     test('with source strings only', () => {
         expect(convert({
-            source: source(new Date("2019-12-31T10:00:00.000000")),
+            source,
             sourceLanguage: 'en-US',
             original: 'some ns'
         })).toEqual<ParseOptions>({
-            content: expectedContentWithSource(new Date(now)),
+            content: expectedContentWithSource,
         });
     });
 
     test('with source and target strings', () => {
         expect(convert({
-            source: source(new Date("2019-12-31T10:00:00.000000")),
-            target: target(new Date("2019-12-31T10:00:00.000000")),
+            source,
+            target,
             sourceLanguage: 'en-US',
             targetLanguage: 'de-DE',
             original: 'some ns'
         })).toEqual<ParseOptions>({
-            content: expectedContentWithSourceAndTarget(new Date(now)),
+            content: expectedContentWithSourceAndTarget,
         });
     });
 });
 
 describe('convert gettext PO to ARB', () => {
     test('with source strings only', () => {
-        const content = expectedContentWithSource(new Date(now));
+        const content = expectedContentWithSource;
 
         expect(parse({ content })).toEqual<ConvertOptions>({
-            source: source(new Date(now)),
+            source,
             target: '',
             original: 'some ns',
             sourceLanguage: 'en-US',
@@ -202,11 +202,11 @@ describe('convert gettext PO to ARB', () => {
     });
 
     test('with source and target strings', () => {
-        const content = expectedContentWithSourceAndTarget(new Date(now));
+        const content = expectedContentWithSourceAndTarget;
 
         expect(parse({ content })).toEqual<ConvertOptions>({
-            source: source(new Date(now)),
-            target: target(new Date(now)),
+            source,
+            target,
             original: 'some ns',
             sourceLanguage: 'en-US',
             targetLanguage: 'de-DE',
