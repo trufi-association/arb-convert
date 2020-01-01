@@ -3,24 +3,24 @@ import { ConvertOptions, ParseOptions } from '../types';
 import mockDateNow from '../../tests/mockDateNow';
 const { now } = mockDateNow();
 
-const source = (lastModified: string) => JSON.stringify({
+const source = (lastModified: Date) => JSON.stringify({
     "@@locale": "en_US",
-    "@@last_modified": lastModified,
+    "@@last_modified": lastModified.toISOString(),
     "simple": "Super simple",
     "@simple": {
-        "description": "A simple string",
+        "description": "",
         "type": "text",
-        "placeholders": {}
+        "placeholders": {},
     },
     "param": "Walk {distance}",
     "@param": {
-        "description": "",
+        "description": "Walking instruction",
         "type": "text",
         "placeholders": {
             "distance": {
                 "example": "500 m"
             },
-        }
+        },
     },
     "long": "Very long string that exceeds the max char limit of 80 characters easily and thus forces a line break in the resulting PO file",
     "@long": {
@@ -36,18 +36,18 @@ const source = (lastModified: string) => JSON.stringify({
     },
 }, null, 2);
 
-const target = (lastModified: string) => JSON.stringify({
+const target = (lastModified: Date) => JSON.stringify({
     "@@locale": "de_DE",
-    "@@last_modified": lastModified,
+    "@@last_modified": lastModified.toISOString(),
     "simple": "Super simpel",
     "@simple": {
-        "description": "A simple string",
+        "description": "",
         "type": "text",
         "placeholders": {}
     },
     "param": "Laufe {distance}",
     "@param": {
-        "description": "",
+        "description": "Walking instruction",
         "type": "text",
         "placeholders": {
             "distance": {
@@ -69,35 +69,35 @@ const target = (lastModified: string) => JSON.stringify({
     },
 }, null, 2);
 
-const expectedContentEmpty = (revisionDate: string) => ''
+const expectedContentEmpty = (revisionDate: Date) => ''
     + '# Translation converted from ARB\n'
     + '# original: \n'
     + '# srcLang: \n'
     + '# trgLang: \n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + revisionDate + '"\n'
+    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n';
 
-const expectedContentWithSource = (revisionDate: string) => ''
+const expectedContentWithSource = (revisionDate: Date) => ''
     + '# Translation converted from ARB\n'
     + '# original: some ns\n'
     + '# srcLang: en-US\n'
     + '# trgLang: \n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + revisionDate + '"\n'
+    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n'
     + '\n'
-    + '#. A simple string\n'
     + 'msgctxt "simple"\n'
     + 'msgid "Super simple"\n'
     + 'msgstr ""\n'
     + '\n'
+    + '#. Walking instruction\n'
     + '#. {distance} example: 500 m\n'
     + 'msgctxt "param"\n'
     + 'msgid "Walk {distance}"\n'
@@ -118,23 +118,23 @@ const expectedContentWithSource = (revisionDate: string) => ''
     + 'msgid "But a short string :D"\n'
     + 'msgstr ""\n';
 
-const expectedContentWithSourceAndTarget = (revisionDate: string) => ''
+const expectedContentWithSourceAndTarget = (revisionDate: Date) => ''
     + '# Translation converted from ARB\n'
     + '# original: some ns\n'
     + '# srcLang: en-US\n'
     + '# trgLang: de-DE\n'
     + 'msgid ""\n'
     + 'msgstr ""\n'
-    + '"PO-Revision-Date: ' + revisionDate + '"\n'
+    + '"PO-Revision-Date: ' + formatDate(revisionDate) + '"\n'
     + '"MIME-Version: 1.0"\n'
     + '"Content-Type: text/plain; charset=UTF-8"\n'
     + '"Content-Transfer-Encoding: 8bit"\n'
     + '\n'
-    + '#. A simple string\n'
     + 'msgctxt "simple"\n'
     + 'msgid "Super simple"\n'
     + 'msgstr "Super simpel"\n'
     + '\n'
+    + '#. Walking instruction\n'
     + '#. {distance} example: 500 m\n'
     + 'msgctxt "param"\n'
     + 'msgid "Walk {distance}"\n'
@@ -161,40 +161,39 @@ const expectedContentWithSourceAndTarget = (revisionDate: string) => ''
 describe('convert ARB to gettext PO', () => {
     test('with empty source and no other options', () => {
         expect(convert({ source: '{}' })).toEqual<ParseOptions>({
-            content: expectedContentEmpty(formatDate(new Date(now))),
+            content: expectedContentEmpty(new Date(now)),
         });
     });
 
     test('with source strings only', () => {
         expect(convert({
-            source: source("2019-12-31T10:00:00.000000"),
+            source: source(new Date("2019-12-31T10:00:00.000000")),
             sourceLanguage: 'en-US',
             original: 'some ns'
         })).toEqual<ParseOptions>({
-            content: expectedContentWithSource(formatDate(new Date(now))),
+            content: expectedContentWithSource(new Date(now)),
         });
     });
 
     test('with source and target strings', () => {
         expect(convert({
-            source: source("2019-12-31T10:00:00.000000"),
-            target: target("2019-12-31T10:00:00.000000"),
+            source: source(new Date("2019-12-31T10:00:00.000000")),
+            target: target(new Date("2019-12-31T10:00:00.000000")),
             sourceLanguage: 'en-US',
             targetLanguage: 'de-DE',
             original: 'some ns'
         })).toEqual<ParseOptions>({
-            content: expectedContentWithSourceAndTarget(formatDate(new Date(now))),
+            content: expectedContentWithSourceAndTarget(new Date(now)),
         });
     });
 });
 
 describe('convert gettext PO to ARB', () => {
     test('with source strings only', () => {
-        const content = expectedContentWithSource(formatDate(new Date(now)));
-        const dateString = new Date(now).toISOString();
+        const content = expectedContentWithSource(new Date(now));
 
         expect(parse({ content })).toEqual<ConvertOptions>({
-            source: source(dateString),
+            source: source(new Date(now)),
             target: '',
             original: 'some ns',
             sourceLanguage: 'en-US',
@@ -203,12 +202,11 @@ describe('convert gettext PO to ARB', () => {
     });
 
     test('with source and target strings', () => {
-        const content = expectedContentWithSourceAndTarget(formatDate(new Date(now)));
-        const dateString = new Date(now).toISOString();
+        const content = expectedContentWithSourceAndTarget(new Date(now));
 
         expect(parse({ content })).toEqual<ConvertOptions>({
-            source: source(dateString),
-            target: target(dateString),
+            source: source(new Date(now)),
+            target: target(new Date(now)),
             original: 'some ns',
             sourceLanguage: 'en-US',
             targetLanguage: 'de-DE',
