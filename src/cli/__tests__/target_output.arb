@@ -1,0 +1,10 @@
+{
+  "@@locale": "de_DE",
+  "@@last_modified": "2019-12-31T16:00:00.000Z",
+  "title": "Titel",
+  "@title": {
+    "description": "The title",
+    "type": "text",
+    "placeholders": {}
+  }
+}

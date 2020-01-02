@@ -19,8 +19,7 @@ program
 
 // No params
 if (program.rawArgs.length <= 2) {
-  program.help();
-  process.exit(1);
+    program.help(); // shows help and exits
 }
 
 try {

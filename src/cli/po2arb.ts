@@ -14,13 +14,12 @@ program
 
 // No params
 if (program.rawArgs.length <= 2) {
-  program.help();
-  process.exit(1);
+    program.help(); // shows help and exits
 }
 
 try {
     if (!program.file) {
-        throw new Error('file option is required')
+        throw new Error("option '--file <filename>' is required");
     }
 
     const fileContent = fs.readFileSync(program.file, 'utf8');

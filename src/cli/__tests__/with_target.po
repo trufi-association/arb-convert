@@ -1,0 +1,15 @@
+# Translation converted from ARB
+# original: 
+# srcLang: en-US
+# trgLang: de-DE
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2019-12-31 17:00+0100"
+"MIME-Version: 1.0"
+"Content-Type: text/plain; charset=UTF-8"
+"Content-Transfer-Encoding: 8bit"
+
+#. The title
+msgctxt "title"
+msgid "Title"
+msgstr "Titel"
