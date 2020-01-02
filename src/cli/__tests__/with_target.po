@@ -4,7 +4,7 @@
 # trgLang: de-DE
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2019-12-31 17:00+0100"
+"PO-Revision-Date: 2019-12-31 16:00+0000"
 "MIME-Version: 1.0"
 "Content-Type: text/plain; charset=UTF-8"
 "Content-Transfer-Encoding: 8bit"
