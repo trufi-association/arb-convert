@@ -12,8 +12,7 @@
     "prepublish": "npm run build",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
-    "test:cov": "jest --coverage"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
