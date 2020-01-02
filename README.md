@@ -1,8 +1,10 @@
 # arb-convert
 
 ![Build Status](https://github.com/trufi-association/arb-convert/workflows/build/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/arb-convert.svg?style=flat)](https://www.npmjs.com/package/arb-convert)
 [![Coverage Status](https://coveralls.io/repos/github/trufi-association/arb-convert/badge.svg?branch=master)](https://coveralls.io/github/trufi-association/arb-convert?branch=master)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trufi-association/arb-convert/issues)
+[![Package dependencies](https://img.shields.io/david/trufi-association/arb-convert.svg)](https://david-dm.org/trufi-association/arb-convert)
+[![GitHub license](https://img.shields.io/github/license/trufi-association/arb-convert.svg)](https://github.com/trufi-association/arb-convert/blob/master/LICENSE)
 
 Tool to convert JSON-based [Application Resource Bundle](https://github.com/google/app-resource-bundle) (ARB) localization format by Google to another format and back.
 
