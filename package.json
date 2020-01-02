@@ -6,7 +6,9 @@
   "types": "dist/index.d.ts",
   "bin": {
     "arb2xliff": "dist/cli/arb2xliff.js",
-    "xliff2arb": "dist/cli/xliff2arb.js"
+    "xliff2arb": "dist/cli/xliff2arb.js",
+    "arb2po": "dist/cli/arb2po.js",
+    "po2arb": "dist/cli/po2arb.js"
   },
   "scripts": {
     "prepublish": "npm run build",
