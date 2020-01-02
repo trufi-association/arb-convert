@@ -1,5 +1,9 @@
 # arb-convert
 
+![Build Status](https://github.com/trufi-association/arb-convert/workflows/build/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/trufi-association/arb-convert/badge.svg?branch=master)](https://coveralls.io/github/trufi-association/arb-convert?branch=master)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/trufi-association/arb-convert/issues)
+
 Tool to convert JSON-based [Application Resource Bundle](https://github.com/google/app-resource-bundle) (ARB) localization format by Google to another format and back.
 
 ```shell
