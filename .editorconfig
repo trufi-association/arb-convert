@@ -9,3 +9,18 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+[*.arb]
+indent_style = unset
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[*.po]
+indent_style = unset
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[*.xliff]
+indent_style = unset
+trim_trailing_whitespace = false
+insert_final_newline = false

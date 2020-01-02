@@ -3,10 +3,10 @@ coverage/
 .vscode/
 
 .DS_Store
-*.arb
-*.xliff
-*.po
-*.pot
-
 .tsconfig.json
 .editorconfig
+
+/*.arb
+/*.xliff
+/*.po
+/*.pot
