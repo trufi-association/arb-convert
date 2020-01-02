@@ -1,3 +1,4 @@
+import 'array-flat-polyfill';
 import { ConvertOptions, ParseOptions } from './types';
 import { convert as convertToXliff1_2, parse as parseXliff1_2 } from './formats/xliff-1_2';
 import { convert as convertToXliff2_1, parse as parseXliff2_1 } from './formats/xliff-2_1';

@@ -12,7 +12,7 @@
     "prepublish": "npm run build",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage"
+    "test": "TZ=UTC jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/trufi-association/arb-tconvert#readme",
   "dependencies": {
+    "array-flat-polyfill": "^1.0.1",
     "commander": "^4.0.1",
     "xml-js": "^1.6.11"
   },
