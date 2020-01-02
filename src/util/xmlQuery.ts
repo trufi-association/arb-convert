@@ -55,7 +55,8 @@ export default function xmlQuery(node: AllowedInput) {
 
 function innerElements<T>(this: XmlQueryNode<T>) {
     return Array.isArray(this.originalNode)
-        ? this.elements!.flatMap(el => el.elements || [])
+        // flatMap equivalent
+        ? this.elements!.reduce((acc, el) => acc.concat(el.elements || []), [] as Element[])
         : this.elements!;
 }
 
