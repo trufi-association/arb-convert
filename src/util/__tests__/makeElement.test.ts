@@ -1,5 +1,5 @@
 import { Element } from 'xml-js';
-import makeElement from './makeElement';
+import makeElement from '../makeElement';
 
 test('element node having the correct structure', () => {
     const element = makeElement('foo', {

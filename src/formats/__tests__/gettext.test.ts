@@ -1,6 +1,6 @@
-import { convert, parse, timezoneOffset, gettextToJs, Gettext } from './gettext';
-import { ConvertOptions, ParseOptions } from '../types';
-import mockDateNow from '../../tests/mockDateNow';
+import { convert, parse, timezoneOffset, gettextToJs, Gettext } from '../gettext';
+import { ConvertOptions, ParseOptions } from '../../types';
+
 const { now } = mockDateNow();
 
 const source = JSON.stringify({

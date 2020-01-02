@@ -18,5 +18,8 @@
         "node_modules",
         "dist",
         "src/**/*.spec.ts"
-    ]
+    ],
+    "files": [
+        "./.jest/helpers.d.ts"
+    ],
 }

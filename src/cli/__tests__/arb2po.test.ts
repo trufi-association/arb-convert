@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import tempDirectory from 'temp-dir';
-import mockDateNow from '../../../tests/mockDateNow';
+
 mockDateNow();
 
 const onlySourcePo = fs.readFileSync('src/cli/__tests__/only_source.po').toString();

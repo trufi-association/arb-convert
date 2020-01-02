@@ -1,6 +1,6 @@
-import { convert, parse } from './xliff-2_1';
-import { ConvertOptions, ParseOptions } from '../types';
-import mockDateNow from '../../tests/mockDateNow';
+import { convert, parse } from '../xliff-2_1';
+import { ConvertOptions, ParseOptions } from '../../types';
+
 mockDateNow();
 
 const source = JSON.stringify({

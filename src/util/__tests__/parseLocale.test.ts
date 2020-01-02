@@ -1,4 +1,4 @@
-import parseLocale from './parseLocale';
+import parseLocale from '../parseLocale';
 
 test('locales are parsed correctly from strings', () => {
     expect(parseLocale()).toBeUndefined();

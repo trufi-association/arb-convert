@@ -1,6 +1,6 @@
-import { convertFromArb, parseToArb } from './index';
-import { ConvertOptions, ParseOptions } from './types';
-import mockDateNow from '../tests/mockDateNow';
+import { convertFromArb, parseToArb } from '../index';
+import { ConvertOptions, ParseOptions } from '../types';
+
 const { now } = mockDateNow();
 
 const arb = JSON.stringify({

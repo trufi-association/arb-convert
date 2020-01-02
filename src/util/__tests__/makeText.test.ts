@@ -1,5 +1,5 @@
 import { Element } from 'xml-js';
-import makeText from './makeText';
+import makeText from '../makeText';
 
 test('text node having the correct structure', () => {
     const node = makeText('wubba lubba dub dub');

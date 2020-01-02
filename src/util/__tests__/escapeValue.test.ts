@@ -1,4 +1,4 @@
-import escapeValue from './escapeValue';
+import escapeValue from '../escapeValue';
 
 test('escapes values with special characters properly', () => {
   expect(escapeValue('<foo bar="baz" oh=\'yeah\'>&amp;</foo>'))

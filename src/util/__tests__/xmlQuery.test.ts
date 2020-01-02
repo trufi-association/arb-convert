@@ -1,4 +1,4 @@
-import xmlQuery from './xmlQuery';
+import xmlQuery from '../xmlQuery';
 import { Element } from 'xml-js';
 
 test('wrapping an element adds new properties and functions', () => {

@@ -1,4 +1,4 @@
-import zeroPad from './zeroPad';
+import zeroPad from '../zeroPad';
 
 test('zeroPad with default length', () => {
     expect(zeroPad(1)).toBe('01');
