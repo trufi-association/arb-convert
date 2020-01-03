@@ -11,7 +11,6 @@
     "po2arb": "dist/cli/po2arb.js"
   },
   "scripts": {
-    "prepush": "npm run lint && npm test",
     "prepublish": "npm run build",
     "build": "tsc",
     "watch": "tsc -w",
@@ -19,6 +18,11 @@
     "test:watch": "TZ=UTC jest --watch",
     "lint": "eslint **/*.ts **/*.test.ts",
     "lint:fix": "eslint --fix ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint && npm test"
+    }
   },
   "repository": {
     "type": "git",
