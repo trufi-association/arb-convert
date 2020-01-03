@@ -1,9 +1,9 @@
 export default function zeroPad(value: string | number, length = 2): string {
-    value = String(value);
+  let val = String(value);
 
-    while (value.length < length) {
-        value = '0' + value;
-    }
+  while (val.length < length) {
+    val = `0${val}`;
+  }
 
-    return value;
+  return val;
 }

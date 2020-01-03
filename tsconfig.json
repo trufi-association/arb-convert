@@ -6,10 +6,7 @@
         "outDir": "./dist",
         "strict": true,
         "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "lib": [
-            "ES2019.Array"
-        ]
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*"

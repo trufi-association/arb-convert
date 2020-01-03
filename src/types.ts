@@ -1,27 +1,27 @@
-export interface ConvertOptions {
-    source: string;
-    target?: string;
-    original?: string;
-    sourceLanguage?: string;
-    targetLanguage?: string;
+export interface IConvertOptions {
+  source: string;
+  target?: string;
+  original?: string;
+  sourceLanguage?: string;
+  targetLanguage?: string;
 }
 
-export interface ParseOptions {
-    content: string;
+export interface IParseOptions {
+  content: string;
 }
 
-export interface ArbPlaceholders {
-    [placeholder: string]: {
-        [property: string]: string;
-    }
+export interface IArbPlaceholders {
+  [placeholder: string]: {
+    [property: string]: string;
+  };
 }
 
-export interface ArbMeta {
-    description: string;
-    type: string;
-    placeholders: ArbPlaceholders;
+export interface IArbMeta {
+  description: string;
+  type: string;
+  placeholders: IArbPlaceholders;
 }
 
-export interface ApplicationResourceBundle {
-    [key: string]: string | ArbMeta;
+export interface IApplicationResourceBundle {
+  [key: string]: string | IArbMeta;
 }

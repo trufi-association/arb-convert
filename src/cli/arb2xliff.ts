@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
 import commander from 'commander';
+import fs from 'fs';
 import { convertFromArb } from '../index';
 import parseLocale from '../util/parseLocale';
 
@@ -19,49 +19,49 @@ program
 
 // No params
 if (program.rawArgs.length <= 2) {
-    program.help(); // shows help and exits
+  program.help(); // shows help and exits
 }
 
 try {
-    if (!program.sourcefile) {
-        throw new Error("option '--sourcefile <filename>' is required")
-    }
+  if (!program.sourcefile) {
+    throw new Error("option '--sourcefile <filename>' is required");
+  }
 
-    const format = `xliff-${program.outversion || '1.2'}`;
-    const sourceContent = fs.readFileSync(program.sourcefile, 'utf8');
-    const targetContent = program.targetfile && fs.readFileSync(program.targetfile, 'utf8');
-    const result = convertFromArb(format, {
-        source: sourceContent,
-        target: targetContent,
-        original: program.original,
-        sourceLanguage: parseLocale(
-            program.sourcelang,
-            determineArbLocale(sourceContent),
-            program.sourcefile
-        ),
-        targetLanguage: program.targetfile && parseLocale(
-            program.targetlang,
-            determineArbLocale(targetContent),
-            program.targetfile
-        ),
-    });
+  const format = `xliff-${program.outversion || '1.2'}`;
+  const sourceContent = fs.readFileSync(program.sourcefile, 'utf8');
+  const targetContent = program.targetfile && fs.readFileSync(program.targetfile, 'utf8');
+  const result = convertFromArb(format, {
+    source: sourceContent,
+    target: targetContent,
+    original: program.original,
+    sourceLanguage: parseLocale(
+      program.sourcelang,
+      determineArbLocale(sourceContent),
+      program.sourcefile,
+    ),
+    targetLanguage: program.targetfile && parseLocale(
+      program.targetlang,
+      determineArbLocale(targetContent),
+      program.targetfile,
+    ),
+  });
 
-    if (program.out) {
-        fs.writeFileSync(program.out, result.content);
-    } else {
-        process.stdout.write(result.content);
-    }
+  if (program.out) {
+    fs.writeFileSync(program.out, result.content);
+  } else {
+    process.stdout.write(result.content);
+  }
 } catch (error) {
-  console.log(`error: ${error.message}`);
+  process.stdout.write(`error: ${error.message}`);
   process.exit(1);
 }
 
 function determineArbLocale(content: string) {
-    const matches = content.match(/"@@locale":\s*"(.+)"/);
+  const matches = content.match(/"@@locale":\s*"(.+)"/);
 
-    if (matches) {
-        return matches[1];
-    }
+  if (matches) {
+    return matches[1];
+  }
 
-    return '';
+  return '';
 }

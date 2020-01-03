@@ -1,72 +1,74 @@
-import { convert, parse, timezoneOffset, gettextToJs, Gettext } from '../gettext';
-import { ConvertOptions, ParseOptions } from '../../types';
+import { IConvertOptions, IParseOptions } from '../../types';
+import {
+  convert, gettextToJs, IGettext, parse, timezoneOffset,
+} from '../gettext';
 
 const { now } = mockDateNow();
 
 const source = JSON.stringify({
-    "@@locale": "en_US",
-    "@@last_modified": "2019-12-31T16:00:00.000Z",
-    "simple": "Super simple",
-    "@simple": {
-        "description": "",
-        "type": "text",
-        "placeholders": {},
+  '@@locale': 'en_US',
+  '@@last_modified': '2019-12-31T16:00:00.000Z',
+  simple: 'Super simple',
+  '@simple': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
+  param: 'Walk {distance}',
+  '@param': {
+    description: 'Walking instruction',
+    type: 'text',
+    placeholders: {
+      distance: {
+        example: '500 m',
+      },
     },
-    "param": "Walk {distance}",
-    "@param": {
-        "description": "Walking instruction",
-        "type": "text",
-        "placeholders": {
-            "distance": {
-                "example": "500 m"
-            },
-        },
-    },
-    "long": "Very long string that exceeds the max char limit of 80 characters easily and thus forces a line break in the resulting PO file",
-    "@long": {
-        "description": "We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?",
-        "type": "text",
-        "placeholders": {},
-    },
-    "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": "But a short string :D",
-    "@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": {
-        "description": "Well, also the key might be very long and need to be broken to multiple lines",
-        "type": "text",
-        "placeholders": {},
-    },
+  },
+  long: 'Very long string that exceeds the max char limit of 80 characters easily and thus forces a line break in the resulting PO file',
+  '@long': {
+    description: 'We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?',
+    type: 'text',
+    placeholders: {},
+  },
+  longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey: 'But a short string :D',
+  '@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey': {
+    description: 'Well, also the key might be very long and need to be broken to multiple lines',
+    type: 'text',
+    placeholders: {},
+  },
 }, null, 2);
 
 const target = JSON.stringify({
-    "@@locale": "de_DE",
-    "@@last_modified": "2019-12-31T16:00:00.000Z",
-    "simple": "Super simpel",
-    "@simple": {
-        "description": "",
-        "type": "text",
-        "placeholders": {}
+  '@@locale': 'de_DE',
+  '@@last_modified': '2019-12-31T16:00:00.000Z',
+  simple: 'Super simpel',
+  '@simple': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
+  param: 'Laufe {distance}',
+  '@param': {
+    description: 'Walking instruction',
+    type: 'text',
+    placeholders: {
+      distance: {
+        example: '500 m',
+      },
     },
-    "param": "Laufe {distance}",
-    "@param": {
-        "description": "Walking instruction",
-        "type": "text",
-        "placeholders": {
-            "distance": {
-                "example": "500 m"
-            },
-        }
-    },
-    "long": "Ein sehr langer String der problemlos das maximale Zeichenlimit von 80 Zeichen überschreitet und damit einen Zeilenumbruch in der resultierenden PO-Datei erwingt",
-    "@long": {
-        "description": "We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?",
-        "type": "text",
-        "placeholders": {},
-    },
-    "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": "Aber eine kurze Zeichenkette :D",
-    "@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": {
-        "description": "Well, also the key might be very long and need to be broken to multiple lines",
-        "type": "text",
-        "placeholders": {},
-    },
+  },
+  long: 'Ein sehr langer String der problemlos das maximale Zeichenlimit von 80 Zeichen überschreitet und damit einen Zeilenumbruch in der resultierenden PO-Datei erwingt',
+  '@long': {
+    description: 'We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?',
+    type: 'text',
+    placeholders: {},
+  },
+  longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey: 'Aber eine kurze Zeichenkette :D',
+  '@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey': {
+    description: 'Well, also the key might be very long and need to be broken to multiple lines',
+    type: 'text',
+    placeholders: {},
+  },
 }, null, 2);
 
 const expectedContentEmpty = ''
@@ -159,81 +161,81 @@ const expectedContentWithSourceAndTarget = ''
     + 'msgstr "Aber eine kurze Zeichenkette :D"\n';
 
 describe('convert ARB to gettext PO', () => {
-    test('with empty source and no other options', () => {
-        expect(convert({ source: '{}' })).toEqual<ParseOptions>({
-            content: expectedContentEmpty,
-        });
+  test('with empty source and no other options', () => {
+    expect(convert({ source: '{}' })).toEqual<IParseOptions>({
+      content: expectedContentEmpty,
     });
+  });
 
-    test('with source strings only', () => {
-        expect(convert({
-            source,
-            sourceLanguage: 'en-US',
-            original: 'some ns'
-        })).toEqual<ParseOptions>({
-            content: expectedContentWithSource,
-        });
+  test('with source strings only', () => {
+    expect(convert({
+      source,
+      sourceLanguage: 'en-US',
+      original: 'some ns',
+    })).toEqual<IParseOptions>({
+      content: expectedContentWithSource,
     });
+  });
 
-    test('with source and target strings', () => {
-        expect(convert({
-            source,
-            target,
-            sourceLanguage: 'en-US',
-            targetLanguage: 'de-DE',
-            original: 'some ns'
-        })).toEqual<ParseOptions>({
-            content: expectedContentWithSourceAndTarget,
-        });
+  test('with source and target strings', () => {
+    expect(convert({
+      source,
+      target,
+      sourceLanguage: 'en-US',
+      targetLanguage: 'de-DE',
+      original: 'some ns',
+    })).toEqual<IParseOptions>({
+      content: expectedContentWithSourceAndTarget,
     });
+  });
 });
 
 describe('convert gettext PO to ARB', () => {
-    test('with source strings only', () => {
-        const content = expectedContentWithSource;
+  test('with source strings only', () => {
+    const content = expectedContentWithSource;
 
-        expect(parse({ content })).toEqual<ConvertOptions>({
-            source,
-            target: '',
-            original: 'some ns',
-            sourceLanguage: 'en-US',
-            targetLanguage: '',
-        });
+    expect(parse({ content })).toEqual<IConvertOptions>({
+      source,
+      target: '',
+      original: 'some ns',
+      sourceLanguage: 'en-US',
+      targetLanguage: '',
     });
+  });
 
-    test('with source and target strings', () => {
-        const content = expectedContentWithSourceAndTarget;
+  test('with source and target strings', () => {
+    const content = expectedContentWithSourceAndTarget;
 
-        expect(parse({ content })).toEqual<ConvertOptions>({
-            source,
-            target,
-            original: 'some ns',
-            sourceLanguage: 'en-US',
-            targetLanguage: 'de-DE',
-        });
+    expect(parse({ content })).toEqual<IConvertOptions>({
+      source,
+      target,
+      original: 'some ns',
+      sourceLanguage: 'en-US',
+      targetLanguage: 'de-DE',
     });
+  });
 });
 
 describe('gettext utility functions', () => {
-    test('timezoneOffset output with different timezones', () => {
-        const date = new Date(now);
-        // date.getTimezoneOffset() always returns the loca TZ offset, so we have to
-        // monkey patch it to return different results.
-        date.getTimezoneOffset = () => 0;
-        expect(timezoneOffset(date)).toBe('+0000');
+  test('timezoneOffset output with different timezones', () => {
+    const date = new Date(now);
+    // date.getTimezoneOffset() always returns the loca TZ offset, so we have to
+    // monkey patch it to return different results.
+    date.getTimezoneOffset = () => 0;
+    expect(timezoneOffset(date)).toBe('+0000');
 
-        date.getTimezoneOffset = () => -60;
-        expect(timezoneOffset(date)).toBe('+0100');
+    date.getTimezoneOffset = () => -60;
+    expect(timezoneOffset(date)).toBe('+0100');
 
-        date.getTimezoneOffset = () => -270;
-        expect(timezoneOffset(date)).toBe('+0430');
+    date.getTimezoneOffset = () => -270;
+    expect(timezoneOffset(date)).toBe('+0430');
 
-        date.getTimezoneOffset = () => 300;
-        expect(timezoneOffset(date)).toBe('-0500');
-    });
+    date.getTimezoneOffset = () => 300;
+    expect(timezoneOffset(date)).toBe('-0500');
+  });
 
-    test('gettextToJs with all possible comment types', () => {
-        const content = ''
+  test('gettextToJs with all possible comment types', () => {
+    const content = ''
             + '# first line\n'
             + '# second line\n'
             + '#. 1st line\n'
@@ -246,25 +248,25 @@ describe('gettext utility functions', () => {
             + '"target "\n'
             + '"string"\n';
 
-        expect(gettextToJs(content)).toEqual<Gettext>([
-            {
-                translatorCommentLines: [
-                    'first line',
-                    'second line',
-                ],
-                extractedCommentLines: [
-                    '1st line',
-                    '2nd line',
-                ],
-                references: [
-                    'file.dart:123',
-                    'another_file.dart:456',
-                ],
-                flags: ['fuzzy', 'c-format'],
-                msgctxt: 'context',
-                msgid: 'source string',
-                msgstr: 'target string',
-            }
-        ]);
-    });
+    expect(gettextToJs(content)).toEqual<IGettext>([
+      {
+        translatorCommentLines: [
+          'first line',
+          'second line',
+        ],
+        extractedCommentLines: [
+          '1st line',
+          '2nd line',
+        ],
+        references: [
+          'file.dart:123',
+          'another_file.dart:456',
+        ],
+        flags: ['fuzzy', 'c-format'],
+        msgctxt: 'context',
+        msgid: 'source string',
+        msgstr: 'target string',
+      },
+    ]);
+  });
 });

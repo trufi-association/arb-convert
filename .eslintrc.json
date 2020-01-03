@@ -1,0 +1,25 @@
+{
+    "extends": [
+        "airbnb-typescript/base"
+    ],
+    "env": {
+      "node": true
+    },
+    "rules": {
+        "import/no-unresolved": 0,
+        "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+        "arrow-parens": ["error", "as-needed", { "requireForBlockBody": false }]
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.test.ts"
+        ],
+        "env": {
+          "jest": true
+        },
+        "plugins": ["jest"],
+        "extends": ["plugin:jest/recommended"]
+      }
+    ]
+}

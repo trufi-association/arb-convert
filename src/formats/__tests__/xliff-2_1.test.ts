@@ -1,72 +1,72 @@
-import { convert, parse } from '../xliff-2_1';
-import { ConvertOptions, ParseOptions } from '../../types';
+import { IConvertOptions, IParseOptions } from '../../types';
+import { convert, parse } from '../xliff-2_1';
 
 mockDateNow();
 
 const source = JSON.stringify({
-    "@@locale": "en_US",
-    "@@last_modified": "2019-12-31T16:00:00.000Z",
-    "simple": "Super simple",
-    "@simple": {
-        "description": "",
-        "type": "text",
-        "placeholders": {},
+  '@@locale': 'en_US',
+  '@@last_modified': '2019-12-31T16:00:00.000Z',
+  simple: 'Super simple',
+  '@simple': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
+  param: 'Walk {distance}',
+  '@param': {
+    description: 'Walking instruction',
+    type: 'text',
+    placeholders: {
+      distance: {
+        example: '500 m',
+      },
     },
-    "param": "Walk {distance}",
-    "@param": {
-        "description": "Walking instruction",
-        "type": "text",
-        "placeholders": {
-            "distance": {
-                "example": "500 m"
-            },
-        },
-    },
-    "long": "Very long string that exceeds the max char limit of 80 characters easily and thus forces a line break in the resulting PO file",
-    "@long": {
-        "description": "We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?",
-        "type": "text",
-        "placeholders": {},
-    },
-    "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": "But a short string :D",
-    "@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": {
-        "description": "Well, also the key might be very long and need to be broken to multiple lines",
-        "type": "text",
-        "placeholders": {},
-    },
+  },
+  long: 'Very long string that exceeds the max char limit of 80 characters easily and thus forces a line break in the resulting PO file',
+  '@long': {
+    description: 'We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?',
+    type: 'text',
+    placeholders: {},
+  },
+  longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey: 'But a short string :D',
+  '@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey': {
+    description: 'Well, also the key might be very long and need to be broken to multiple lines',
+    type: 'text',
+    placeholders: {},
+  },
 }, null, 2);
 
 const target = JSON.stringify({
-    "@@locale": "de_DE",
-    "@@last_modified": "2019-12-31T16:00:00.000Z",
-    "simple": "Super simpel",
-    "@simple": {
-        "description": "",
-        "type": "text",
-        "placeholders": {}
+  '@@locale': 'de_DE',
+  '@@last_modified': '2019-12-31T16:00:00.000Z',
+  simple: 'Super simpel',
+  '@simple': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
+  param: 'Laufe {distance}',
+  '@param': {
+    description: 'Walking instruction',
+    type: 'text',
+    placeholders: {
+      distance: {
+        example: '500 m',
+      },
     },
-    "param": "Laufe {distance}",
-    "@param": {
-        "description": "Walking instruction",
-        "type": "text",
-        "placeholders": {
-            "distance": {
-                "example": "500 m"
-            },
-        }
-    },
-    "long": "Ein sehr langer String der problemlos das maximale Zeichenlimit von 80 Zeichen überschreitet und damit einen Zeilenumbruch in der resultierenden PO-Datei erwingt",
-    "@long": {
-        "description": "We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?",
-        "type": "text",
-        "placeholders": {},
-    },
-    "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": "Aber eine kurze Zeichenkette :D",
-    "@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey": {
-        "description": "Well, also the key might be very long and need to be broken to multiple lines",
-        "type": "text",
-        "placeholders": {},
-    },
+  },
+  long: 'Ein sehr langer String der problemlos das maximale Zeichenlimit von 80 Zeichen überschreitet und damit einen Zeilenumbruch in der resultierenden PO-Datei erwingt',
+  '@long': {
+    description: 'We need to test long comments as well, so this is me wasting time by writing something meaningful. Did you really read this to the end?',
+    type: 'text',
+    placeholders: {},
+  },
+  longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey: 'Aber eine kurze Zeichenkette :D',
+  '@longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglongkey': {
+    description: 'Well, also the key might be very long and need to be broken to multiple lines',
+    type: 'text',
+    placeholders: {},
+  },
 }, null, 2);
 
 const expectedContentEmpty = ''
@@ -175,87 +175,86 @@ const xliffWithMissingAnnotations = ''
     + '</xliff>';
 
 const expectedArbFormXliffWithMissingAnnotations = JSON.stringify({
-    "@@locale": "",
-    "@@last_modified": "2019-12-31T16:00:00.000Z",
-    "simple": "Super simple",
-    "@simple": {
-        "description": "",
-        "type": "text",
-        "placeholders": {},
-    },
-    "param": "Walk {distance}",
-    "@param": {
-        "description": "",
-        "type": "text",
-        "placeholders": {},
-    },
+  '@@locale': '',
+  '@@last_modified': '2019-12-31T16:00:00.000Z',
+  simple: 'Super simple',
+  '@simple': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
+  param: 'Walk {distance}',
+  '@param': {
+    description: '',
+    type: 'text',
+    placeholders: {},
+  },
 }, null, 2);
 
-
 describe('convert ARB to XLIFF 2.1', () => {
-    test('with empty source and no other options', () => {
-        expect(convert({ source: '{}' })).toEqual<ParseOptions>({
-            content: expectedContentEmpty,
-        });
+  test('with empty source and no other options', () => {
+    expect(convert({ source: '{}' })).toEqual<IParseOptions>({
+      content: expectedContentEmpty,
     });
+  });
 
-    test('with source strings only', () => {
-        expect(convert({
-            source,
-            sourceLanguage: 'en-US',
-            original: 'some ns'
-        })).toEqual<ParseOptions>({
-            content: expectedContentWithSource,
-        });
+  test('with source strings only', () => {
+    expect(convert({
+      source,
+      sourceLanguage: 'en-US',
+      original: 'some ns',
+    })).toEqual<IParseOptions>({
+      content: expectedContentWithSource,
     });
+  });
 
-    test('with source and target strings', () => {
-        expect(convert({
-            source,
-            target,
-            sourceLanguage: 'en-US',
-            targetLanguage: 'de-DE',
-            original: 'some ns'
-        })).toEqual<ParseOptions>({
-            content: expectedContentWithSourceAndTarget,
-        });
+  test('with source and target strings', () => {
+    expect(convert({
+      source,
+      target,
+      sourceLanguage: 'en-US',
+      targetLanguage: 'de-DE',
+      original: 'some ns',
+    })).toEqual<IParseOptions>({
+      content: expectedContentWithSourceAndTarget,
     });
+  });
 });
 
 describe('convert XLIFF 2.1 to ARB', () => {
-    test('with source strings only', () => {
-        const content = expectedContentWithSource;
+  test('with source strings only', () => {
+    const content = expectedContentWithSource;
 
-        expect(parse({ content })).toEqual<ConvertOptions>({
-            source,
-            target: '',
-            original: 'some ns',
-            sourceLanguage: 'en-US',
-            targetLanguage: '',
-        });
+    expect(parse({ content })).toEqual<IConvertOptions>({
+      source,
+      target: '',
+      original: 'some ns',
+      sourceLanguage: 'en-US',
+      targetLanguage: '',
     });
+  });
 
-    test('with source and target strings', () => {
-        const content = expectedContentWithSourceAndTarget;
+  test('with source and target strings', () => {
+    const content = expectedContentWithSourceAndTarget;
 
-        expect(parse({ content })).toEqual<ConvertOptions>({
-            source,
-            target,
-            original: 'some ns',
-            sourceLanguage: 'en-US',
-            targetLanguage: 'de-DE',
-        });
+    expect(parse({ content })).toEqual<IConvertOptions>({
+      source,
+      target,
+      original: 'some ns',
+      sourceLanguage: 'en-US',
+      targetLanguage: 'de-DE',
     });
+  });
 
-    test('with some missing/malformed annotations', () => {
-        const content = xliffWithMissingAnnotations;
+  test('with some missing/malformed annotations', () => {
+    const content = xliffWithMissingAnnotations;
 
-        expect(parse({ content })).toEqual<ConvertOptions>({
-            source: expectedArbFormXliffWithMissingAnnotations,
-            target: '',
-            original: '',
-            sourceLanguage: '',
-            targetLanguage: '',
-        });
+    expect(parse({ content })).toEqual<IConvertOptions>({
+      source: expectedArbFormXliffWithMissingAnnotations,
+      target: '',
+      original: '',
+      sourceLanguage: '',
+      targetLanguage: '',
     });
+  });
 });

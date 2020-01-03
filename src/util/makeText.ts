@@ -1,8 +1,8 @@
-import { Element } from "xml-js";
+import { Element } from 'xml-js';
 
 export default function makeText(text: string): Element {
-    return {
-        type: 'text',
-        text,
-    };
+  return {
+    type: 'text',
+    text,
+  };
 }

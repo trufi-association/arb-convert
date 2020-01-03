@@ -11,10 +11,14 @@
     "po2arb": "dist/cli/po2arb.js"
   },
   "scripts": {
+    "prepush": "npm run lint && npm test",
     "prepublish": "npm run build",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "TZ=UTC jest --coverage"
+    "test": "TZ=UTC jest --coverage",
+    "test:watch": "TZ=UTC jest --watch",
+    "lint": "eslint **/*.ts **/*.test.ts",
+    "lint:fix": "eslint --fix ."
   },
   "repository": {
     "type": "git",
@@ -47,29 +51,15 @@
   "devDependencies": {
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^6.3.1",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jest": "^23.2.0",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "temp-dir": "^2.0.0",
     "ts-jest": "^24.2.0",
     "typescript": "^3.7.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "coveragePathIgnorePatterns": [],
-    "collectCoverageFrom": [
-      "src/**"
-    ],
-    "testRegex": ".test.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "coverage",
-    "testEnvironment": "node",
-    "setupFiles": [
-      "./.jest/helpers.ts"
-    ]
   }
 }
