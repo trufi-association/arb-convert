@@ -7,6 +7,7 @@ mockDateNow();
 
 const onlySourcePo = fs.readFileSync('src/cli/__tests__/only_source.po').toString();
 const withTargetPo = fs.readFileSync('src/cli/__tests__/with_target.po').toString();
+const withMismatchTargetPo = fs.readFileSync('src/cli/__tests__/with_mismatch_target.po').toString();
 
 describe('arb2po cli tool', () => {
   let exitSpy: jest.SpyInstance;
@@ -85,6 +86,19 @@ describe('arb2po cli tool', () => {
 
     expect(exitSpy).not.toHaveBeenCalled();
     expect(stdoutSpy).toHaveBeenCalledWith(withTargetPo);
+    expect(helpSpy).not.toHaveBeenCalled();
+  });
+
+  test('with --sourcefile and --targetfile args and mismatch of keys', () => {
+    process.argv = [
+      'node', 'arb2po.js',
+      '--sourcefile', 'src/cli/__tests__/source.arb',
+      '--targetfile', 'src/cli/__tests__/target_mismatch_de_DE.arb',
+    ];
+    expect(() => require('../arb2po')).not.toThrow();
+
+    expect(exitSpy).not.toHaveBeenCalled();
+    expect(stdoutSpy).toHaveBeenCalledWith(withMismatchTargetPo);
     expect(helpSpy).not.toHaveBeenCalled();
   });
 

@@ -1,0 +1,8 @@
+{
+  "title_mismatch": "Titel",
+  "@title_mismatch": {
+    "description": "The title",
+    "type": "text",
+    "placeholders": {}
+  }
+}

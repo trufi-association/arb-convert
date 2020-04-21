@@ -46,7 +46,7 @@ msgstr ""
     .filter(key => key[0] !== '@')
     .forEach(key => {
       const sourceString = sourceJs[key];
-      const targetString = targetJs && targetJs[key];
+      const targetString = (targetJs && targetJs[key]) || '';
       const { description, placeholders } = sourceJs[`@${key}`];
 
       content += '\n';

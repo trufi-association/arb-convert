@@ -7,6 +7,7 @@ mockDateNow();
 
 const onlySourceXliff = fs.readFileSync('src/cli/__tests__/only_source.xliff').toString();
 const withTargetXliff = fs.readFileSync('src/cli/__tests__/with_target.xliff').toString();
+const withMismatchTargetXliff = fs.readFileSync('src/cli/__tests__/with_mismatch_target.xliff').toString();
 
 describe('arb2xliff cli tool', () => {
   let exitSpy: jest.SpyInstance;
@@ -85,6 +86,19 @@ describe('arb2xliff cli tool', () => {
 
     expect(exitSpy).not.toHaveBeenCalled();
     expect(stdoutSpy).toHaveBeenCalledWith(withTargetXliff);
+    expect(helpSpy).not.toHaveBeenCalled();
+  });
+
+  test('with --sourcefile and --targetfile args and mismatch of keys', () => {
+    process.argv = [
+      'node', 'arb2xliff.js',
+      '--sourcefile', 'src/cli/__tests__/source.arb',
+      '--targetfile', 'src/cli/__tests__/target_mismatch_de_DE.arb',
+    ];
+    expect(() => require('../arb2xliff')).not.toThrow();
+
+    expect(exitSpy).not.toHaveBeenCalled();
+    expect(stdoutSpy).toHaveBeenCalledWith(withMismatchTargetXliff);
     expect(helpSpy).not.toHaveBeenCalled();
   });
 
