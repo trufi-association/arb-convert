@@ -16,8 +16,8 @@
     "watch": "tsc -w",
     "test": "TZ=UTC jest --coverage",
     "test:watch": "TZ=UTC jest --watch",
-    "lint": "eslint **/*.ts **/*.test.ts",
-    "lint:fix": "eslint --fix ."
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts --fix ."
   },
   "husky": {
     "hooks": {
